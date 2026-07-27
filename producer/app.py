@@ -1,4 +1,7 @@
 from fastapi import FastAPI
+from services.coingecko import CoinGeckoclient
+
+client = CoinGeckoclient()
 
 app = FastAPI(
     title="Crypto Producer Service",
@@ -19,3 +22,7 @@ def health():
     return {
         "status": "healthy"
     }
+
+@app.get("/prices")
+def get_prices():
+    return client.get_prices()
