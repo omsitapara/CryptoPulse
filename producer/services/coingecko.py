@@ -2,7 +2,7 @@ from datetime import datetime,timezone
 import httpx
 from models import CryptoPrice
 
-class CoinGeckoclient:
+class CoinGeckoClient:
     BASE_URL = "https://api.coingecko.com/api/v3"
 
     def __init__(self,timeout:int = 10):

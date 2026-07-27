@@ -1,7 +1,9 @@
 from fastapi import FastAPI
-from services.coingecko import CoinGeckoclient
+from services.coingecko import CoinGeckoClient
+from services.publisher import PubSubPublisher
 
-client = CoinGeckoclient()
+client = CoinGeckoClient()
+publisher = PubSubPublisher()
 
 app = FastAPI(
     title="Crypto Producer Service",
@@ -23,6 +25,16 @@ def health():
         "status": "healthy"
     }
 
-@app.get("/prices")
-def get_prices():
-    return client.get_prices()
+@app.post("/publish")
+def publish():
+    prices = client.get_prices()
+
+    message_ids = []
+    for price in prices:
+        message_id = publisher.publish(price)
+        message_ids.append(message_id)
+
+    return {
+        "published": len(message_ids),
+        "message_ids": message_ids
+    }
