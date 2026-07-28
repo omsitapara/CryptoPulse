@@ -1,6 +1,7 @@
 from datetime import datetime,timezone
 import httpx
 from models import CryptoPrice
+from config import SUPPORTED_COINS,CURRENCY,REQUEST_TIMEOUT
 
 class CoinGeckoClient:
     BASE_URL = "https://api.coingecko.com/api/v3"
@@ -11,11 +12,11 @@ class CoinGeckoClient:
     def get_prices(self)-> list[dict]:
         url = f"{self.BASE_URL}/simple/price"
         params = {
-            "ids": "bitcoin,ethereum,solana,ripple,cardano",
-            "vs_currencies": "inr"
+            "ids": ",".join(SUPPORTED_COINS),
+            "vs_currencies": CURRENCY
         }
 
-        with httpx.Client(timeout=self.timeout) as client:
+        with httpx.Client(timeout=REQUEST_TIMEOUT) as client:
             response = client.get(url, params=params)
             response.raise_for_status()
 
