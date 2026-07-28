@@ -4,7 +4,6 @@ from services.coingecko import CoinGeckoClient
 from services.publisher import PubSubPublisher
 
 client = CoinGeckoClient()
-publisher = PubSubPublisher()
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -31,6 +30,7 @@ def health():
 
 @app.post("/publish")
 def publish():
+    publisher = PubSubPublisher()
     logger.info("Fetching latest cryptocurrency prices......")
     prices = client.get_prices()
     logger.info("Fetched %d cryptocurrency prices",len(prices))
