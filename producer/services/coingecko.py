@@ -1,7 +1,8 @@
+import uuid
 from datetime import datetime,timezone
 import httpx
 from models import CryptoPrice
-from config import SUPPORTED_COINS,CURRENCY,REQUEST_TIMEOUT
+from config import SUPPORTED_COINS,CURRENCY,REQUEST_TIMEOUT,SOURCE,CURRENCY,PRODUCER_VERSION
 
 class CoinGeckoClient:
     BASE_URL = "https://api.coingecko.com/api/v3"
@@ -27,12 +28,13 @@ class CoinGeckoClient:
         for coin,values in data.items():
             events.append(
                 CryptoPrice(
-                    symbol=coin.upper(),
-                    name=coin.title(),
-                    price=values["inr"],
-                    currency="INR",
-                    source="CoinGecko",
-                    event_timestamp=datetime.now(timezone.utc).isoformat()
+                    event_id=str(uuid.uuid4()),
+                    event_timestamp=datetime.now(timezone.utc),
+                    symbol=coin,
+                    price=values[CURRENCY],
+                    currency=CURRENCY.upper(),
+                    source=SOURCE,
+                    producer_version=PRODUCER_VERSION,
                 )
             )
 

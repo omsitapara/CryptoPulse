@@ -1,10 +1,14 @@
 from datetime import datetime
 from pydantic import BaseModel
 
+
 class CryptoPrice(BaseModel):
-    symbol:str
-    name:str 
-    price:float
-    currency:str
-    source:str
-    event_timestamp:datetime
+    event_id: str
+    event_timestamp: datetime
+
+    symbol: str
+    price: float
+    currency: str
+
+    source: str
+    producer_version: str
