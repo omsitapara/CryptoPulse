@@ -1,6 +1,7 @@
 import os
 
 PROJECT_ID = os.getenv("GCP_PROJECT_ID", "realtime-crypto-dev")
+DLQ_TOPIC_ID = "crypto-dlq"
 
 SUBSCRIPTION_ID = os.getenv(
     "PUBSUB_SUBSCRIPTION_ID",

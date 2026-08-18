@@ -7,14 +7,13 @@ from apache_beam.io.gcp.bigquery import BigQueryDisposition
 from datetime import datetime,timezone
 
 from config import PROJECT_ID, SUBSCRIPTION_ID, BRONZE_TABLE
-
+from transforms.validator import EventValidator
+from transforms.dlq import PublishToDLQ
 
 class ParseMessage(beam.DoFn):
     def process(self, element):
         message = element.decode("utf-8")
         data = json.loads(message)
-
-        print(data)
         yield data
 
 class AddIngestTimestamp(beam.DoFn):
@@ -34,17 +33,34 @@ def run():
 
     with beam.Pipeline(options=options) as pipeline:
 
-        (
+        validated = (
             pipeline
             | "Read PubSub" >> ReadFromPubSub(
-                subscription=f"projects/{PROJECT_ID}/subscriptions/{SUBSCRIPTION_ID}"
+                subscription = f"projects/{PROJECT_ID}/subscriptions/{SUBSCRIPTION_ID}"
             )
             | "Parse JSON" >> beam.ParDo(ParseMessage())
+            | "Validate Event" >> beam.ParDo(
+                EventValidator()
+            ).with_outputs(
+                EventValidator.VALID,
+                EventValidator.INVALID
+            )
+        )
+
+        (
+            validated.valid
             | "Add Ingest Timestamp" >> beam.ParDo(AddIngestTimestamp())
-            | "Write to Bronze" >> WriteToBigQuery(
+            | "Write to BQ Bronze" >> WriteToBigQuery(
                 table=BRONZE_TABLE,
-                write_disposition= BigQueryDisposition.WRITE_APPEND,
+                write_disposition=BigQueryDisposition.WRITE_APPEND,
                 create_disposition=BigQueryDisposition.CREATE_NEVER
+            )
+        )
+
+        (
+            validated.invalid
+            | "Publish Invalid Events to DLQ" >> beam.ParDo(
+                PublishToDLQ()
             )
         )
 
