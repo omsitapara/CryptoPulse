@@ -15,9 +15,9 @@ BRONZE_TABLE = (
 REGION = "us-central1"
 
 TEMP_LOCATION = (
-    f"gs://YOUR_BUCKET/dataflow/temp"
+    f"gs://realtime-crypto-dev/dataflow/temp"
 )
 
 STAGING_LOCATION = (
-    f"gs://YOUR_BUCKET/dataflow/staging"
+    f"gs://realtime-crypto-dev/dataflow/staging"
 )
