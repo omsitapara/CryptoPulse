@@ -93,16 +93,15 @@ The platform follows an event-driven architecture where data is ingested, valida
 ## Project Roadmap
 
 * [x] Repository initialization
-* [ ] Cloud Run Producer
-* [ ] Pub/Sub Integration
-* [ ] Streaming Dataflow Pipeline
-* [ ] Bronze Layer
-* [ ] Silver Layer
-* [ ] Gold Layer
-* [ ] REST API
-* [ ] GitHub Actions CI/CD
-* [ ] Monitoring and Logging
-* [ ] Looker Studio Dashboard
+* [x] Cloud Run Producer
+* [x] Pub/Sub Integration
+* [x] Streaming Dataflow Pipeline
+* [x] Bronze Layer
+* [x] Silver Layer
+* [x] Gold Layer
+* [x] REST API
+* [x] Monitoring and Logging
+* [x] Looker Studio Dashboard
 
 ---
 
